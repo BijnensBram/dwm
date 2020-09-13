@@ -1,0 +1,105 @@
+diff --git a/config.def.h b/config.def.h
+index 721aac5..1c64921 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -21,6 +21,11 @@ static const char *colors[][3]      = {
+ 	/*               fg         bg         border   */
+ 	[SchemeNorm]	  = {"#282828", "#282828", "#282828"},
+ 	[SchemeSel]		  = {"#928374", "#282828", "#928374"},
++	[SchemeStatus]    = {"#928374", "#282828", "#000000"}, // Statusbar right {text,background,not used but cannot be empty}
++	[SchemeTagsSel]   = {"#fbf1c7", "#282828", "#000000"}, // Tagbar left selected {text,background,not used but cannot be empty}
++    [SchemeTagsNorm]  = {"#928374", "#282828", "#000000"}, // Tagbar left unselected {text,background,not used but cannot be empty}
++    [SchemeInfoSel]   = {"#928374", "#282828", "#000000"}, // infobar middle  selected {text,background,not used but cannot be empty}
++    [SchemeInfoNorm]  = {"#928374", "#282828", "#000000"}, // infobar middle  unselected {text,background,not used but cannot be empty}
+ };
+ 
+ static const char *const autostart[] = {
+diff --git a/config.h b/config.h
+index 67b81ac..1c64921 100644
+--- a/config.h
++++ b/config.h
+@@ -2,7 +2,7 @@
+ 
+ /* appearance */
+ static const unsigned int borderpx  = 1;        /* border pixel of windows */
+-static const unsigned int gappx     = 5;        /* gaps between windows */
++static const unsigned int gappx     = 8;        /* gaps between windows */
+ static const unsigned int snap      = 32;       /* snap pixel */
+ static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
+ static const unsigned int systrayspacing = 2;   /* systray spacing */
+@@ -21,6 +21,11 @@ static const char *colors[][3]      = {
+ 	/*               fg         bg         border   */
+ 	[SchemeNorm]	  = {"#282828", "#282828", "#282828"},
+ 	[SchemeSel]		  = {"#928374", "#282828", "#928374"},
++	[SchemeStatus]    = {"#928374", "#282828", "#000000"}, // Statusbar right {text,background,not used but cannot be empty}
++	[SchemeTagsSel]   = {"#fbf1c7", "#282828", "#000000"}, // Tagbar left selected {text,background,not used but cannot be empty}
++    [SchemeTagsNorm]  = {"#928374", "#282828", "#000000"}, // Tagbar left unselected {text,background,not used but cannot be empty}
++    [SchemeInfoSel]   = {"#928374", "#282828", "#000000"}, // infobar middle  selected {text,background,not used but cannot be empty}
++    [SchemeInfoNorm]  = {"#928374", "#282828", "#000000"}, // infobar middle  unselected {text,background,not used but cannot be empty}
+ };
+ 
+ static const char *const autostart[] = {
+@@ -31,7 +36,7 @@ static const char *const autostart[] = {
+ 	"blueman-applet", NULL,
+ 	"xfce4-power-manager", NULL,
+ 	"megasync", NULL,
+-	"dunst", "-config","$HOME/.config/dunst/dunst.conf", NULL,
++	"dunst -config $HOME/.config/dunst/dunst.conf", NULL,
+ 	"redshift", "-x;redshift", "-O", "5000", NULL,
+ 	"$HOME/Scripts/randwallpaper.sh", NULL,
+ 	NULL /* terminate */
+diff --git a/dwm.c b/dwm.c
+index 021c004..8b8e1af 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -75,7 +75,7 @@
+ 
+ /* enums */
+ enum { CurNormal, CurResize, CurMove, CurLast }; /* cursor */
+-enum { SchemeNorm, SchemeSel }; /* color schemes */
++enum { SchemeNorm, SchemeSel, SchemeStatus, SchemeTagsSel, SchemeTagsNorm, SchemeInfoSel, SchemeInfoNorm }; /* color schemes */
+ enum { NetSupported, NetWMName, NetWMState, NetWMCheck,
+        NetSystemTray, NetSystemTrayOP, NetSystemTrayOrientation, NetSystemTrayOrientationHorz,
+        NetWMFullscreen, NetActiveWindow, NetWMWindowType,
+@@ -832,7 +832,7 @@ drawbar(Monitor *m)
+ 
+ 	/* draw status first so it can be overdrawn by tags later */
+ 	if (m == selmon) { /* status is only drawn on selected monitor */
+-		drw_setscheme(drw, scheme[SchemeNorm]);
++		drw_setscheme(drw, scheme[SchemeStatus]);
+ 		tw = TEXTW(stext) - lrpad / 2 + 2; /* 2px right padding */
+ 		drw_text(drw, m->ww - tw - stw, 0, tw, bh, lrpad / 2 - 2, stext, 0);
+ 	}
+@@ -846,7 +846,7 @@ drawbar(Monitor *m)
+ 	x = 0;
+ 	for (i = 0; i < LENGTH(tags); i++) {
+ 		w = TEXTW(tags[i]);
+-		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeSel : SchemeNorm]);
++		drw_setscheme(drw, scheme[m->tagset[m->seltags] & 1 << i ? SchemeTagsSel : SchemeTagsNorm]);
+ 		drw_text(drw, x, 0, w, bh, lrpad / 2, tags[i], urg & 1 << i);
+ 		if (occ & 1 << i)
+ 			drw_rect(drw, x + boxs, boxs, boxw, boxw,
+@@ -855,17 +855,17 @@ drawbar(Monitor *m)
+ 		x += w;
+ 	}
+ 	w = blw = TEXTW(m->ltsymbol);
+-	drw_setscheme(drw, scheme[SchemeNorm]);
++	drw_setscheme(drw, scheme[SchemeTagsNorm]);
+ 	x = drw_text(drw, x, 0, w, bh, lrpad / 2, m->ltsymbol, 0);
+ 
+ 	if ((w = m->ww - tw - stw - x) > bh) {
+ 		if (m->sel) {
+-			drw_setscheme(drw, scheme[m == selmon ? SchemeSel : SchemeNorm]);
++			drw_setscheme(drw, scheme[m == selmon ? SchemeInfoSel : SchemeInfoNorm]);
+ 			drw_text(drw, x, 0, w, bh, lrpad / 2, m->sel->name, 0);
+ 			if (m->sel->isfloating)
+ 				drw_rect(drw, x + boxs, boxs, boxw, boxw, m->sel->isfixed, 0);
+ 		} else {
+-			drw_setscheme(drw, scheme[SchemeNorm]);
++			drw_setscheme(drw, scheme[SchemeInfoNorm]);
+ 			drw_rect(drw, x, 0, w, bh, 1, 1);
+ 		}
+ 	}
+diff --git a/dwm.o b/dwm.o
+index 6f616bb..6b40f1a 100644
+Binary files a/dwm.o and b/dwm.o differ
