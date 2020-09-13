@@ -2,7 +2,7 @@
 
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
-static const unsigned int gappx     = 8;        /* gaps between windows */
+static const unsigned int gappx     = 5;        /* gaps between windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const unsigned int systraypinning = 0;   /* 0: sloppy systray follows selected monitor, >0: pin systray to monitor X */
 static const unsigned int systrayspacing = 2;   /* systray spacing */
@@ -31,7 +31,7 @@ static const char *const autostart[] = {
 	"blueman-applet", NULL,
 	"xfce4-power-manager", NULL,
 	"megasync", NULL,
-	"dunst -config $HOME/.config/dunst/dunst.conf", NULL,
+	"dunst", "-config","$HOME/.config/dunst/dunst.conf", NULL,
 	"redshift", "-x;redshift", "-O", "5000", NULL,
 	"$HOME/Scripts/randwallpaper.sh", NULL,
 	NULL /* terminate */
