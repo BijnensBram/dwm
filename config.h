@@ -88,7 +88,6 @@ static Key keys[] = {
 	/* modifier                     key			function		argument */
 	/* launch commands */
 	{ MODKEY,						XK_Return,	spawn,			SHCMD("termite")							},
-	{ MODKEY|ShiftMask,				XK_Return,	spawn,			SHCMD("brave")								},
 	{ MODKEY,						XK_o,		spawn,			SHCMD("thunar")							},
 	/* function keys */ 
 	{ 0,							XF86XK_MonBrightnessUp,		spawn,		SHCMD("xbacklight -inc 5")											},
@@ -116,6 +115,9 @@ static Key keys[] = {
 	{ MODKEY,                       XK_m,		setlayout,      {.v = &layouts[2]}							},
 	{ MODKEY,                       XK_c,		setlayout,      {.v = &layouts[3]}							},
 	{ MODKEY,                       XK_g,		setlayout,      {.v = &layouts[5]}							},
+	{ MODKEY|ShiftMask,             XK_h,		setcfact,       {.f = +0.25} },
+	{ MODKEY|ShiftMask,             XK_l,		setcfact,       {.f = -0.25} },
+	{ MODKEY|ShiftMask,             XK_o,		setcfact,       {.f =  0.00} },
 	{ MODKEY|ControlMask,           XK_space,	setlayout,      {0}											},
 	{ MODKEY|ShiftMask,             XK_space,	togglefloating, {0}											},
 	{ MODKEY,                       XK_0,		view,           {.ui = ~0 }									},
