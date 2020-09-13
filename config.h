@@ -30,7 +30,7 @@ static const char *colors[][3]      = {
 
 static const char *const autostart[] = {
 	"dwmblocks", NULL,
-	"sh", "-c", "picom $HOME/.config/picom.conf", NULL,
+	"sh", "-c", "picom --config $HOME/.config/picom.conf", NULL,
 	"nm-applet", NULL,
 	"lxpolkit", NULL,
 	"blueman-applet", NULL,
