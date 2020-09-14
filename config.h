@@ -51,9 +51,14 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,           -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,           -1 },
+	/* class					instance    title       tags mask     isfloating   monitor */
+	{ "Gimp",					NULL,       NULL,       0,            1,           -1 },
+	{ "Megasync",				NULL,       NULL,       0,            1,           -1 },
+	{ "matplotlib",				NULL,       NULL,       0,            1,           -1 },
+	{ "Lxappearance",			NULL,       NULL,       0,            1,           -1 },
+	{ "Pamac-manager",			NULL,       NULL,       0,            1,           -1 },
+	{ "Nm-connection-editor",	NULL,       NULL,       0,            1,           -1 },
+	{ "Firefox",				NULL,       NULL,       1 << 8,       0,           -1 },
 };
 
 /* layout(s) */
